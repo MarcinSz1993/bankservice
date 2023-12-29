@@ -4,6 +4,7 @@ Java 17,
 Spring Boot 3.1.5,
 Postgresql,
 Liquibase,
+Docker,
 JUnit5,
 Mockito,
 Lombok.

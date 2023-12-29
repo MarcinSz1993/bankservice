@@ -34,12 +34,12 @@ public class TransactionController {
                 TransactionType.valueOf(dataForTransferRequest.getTransactionType()));
     }
 
-    @PostMapping("/transaction")
+    /*@PostMapping("/transaction")
     public Transaction executeBankTransaction(@RequestParam String accountNumber,
                                               @RequestParam double amount,
                                               @RequestParam String transactionType){
         return transactionService.executeTransaction(accountNumber,
                 amount,
                 TransactionType.valueOf(transactionType));
-    }
+    }*/
 }

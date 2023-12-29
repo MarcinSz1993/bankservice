@@ -60,7 +60,7 @@ public class TransactionService {
     }
 
     public static void validateEnoughMoney(double amount, Optional<BankAccount> account,TransactionType transactionType) {
-        if(!transactionType.name().equals("DEPOSIT") || amount > account.orElseThrow().getBalance()){
+        if(amount > account.orElseThrow().getBalance()){
             throw new NotEnoughMoneyException();
         }
     }

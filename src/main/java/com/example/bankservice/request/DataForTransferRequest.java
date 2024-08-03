@@ -1,5 +1,6 @@
 package com.example.bankservice.request;
 
+import com.example.bankservice.model.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,8 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DataForTransferRequest {
     private String accountNumber;
-
     private double amount;
-
-    private String transactionType;
+    private TransactionType transactionType;
 }

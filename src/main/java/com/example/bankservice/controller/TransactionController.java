@@ -4,7 +4,10 @@ import com.example.bankservice.model.Transaction;
 import com.example.bankservice.request.DataForTransferRequest;
 import com.example.bankservice.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,4 +22,5 @@ public class TransactionController {
                 dataForTransferRequest.getAmount(),
                 dataForTransferRequest.getTransactionType());
     }
+
 }

@@ -18,6 +18,9 @@ public class ClientRequest {
     @NotNull(message = "This field cannot be empty!")
     private String surname;
 
+    @NotNull
+    private String password;
+
     @NotNull(message = "This field cannot be empty!")
     @Size(message = "Correct number should have exactly 11 numbers!",min = 11,max = 11)
     private String pesel;

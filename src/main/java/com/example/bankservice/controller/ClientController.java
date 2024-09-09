@@ -17,4 +17,9 @@ public class ClientController {
     public Client create(@RequestBody @Validated ClientRequest clientRequest){
         return clientService.createClient(clientRequest);
     }
+
+    @PostMapping("/login")
+    public String login (@RequestBody Client client){
+        return clientService.verify(client);
+    }
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class NotEnoughMoneyAdvice {
     @ResponseBody
     @ExceptionHandler(NotEnoughMoneyException.class)
-    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
+    @ResponseStatus(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED)
     public String NotEnoughMoneyHandler(NotEnoughMoneyException ex){
         return ex.getMessage();
     }

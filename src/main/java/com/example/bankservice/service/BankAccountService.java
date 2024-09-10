@@ -59,7 +59,6 @@ public class BankAccountService {
             throw new IncorrectPeselException();
         }
     }
-
 }
 
 

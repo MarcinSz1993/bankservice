@@ -1,10 +1,14 @@
 package com.example.bankservice.service;
 
 import com.example.bankservice.exception.ClientAlreadyExistsException;
+import com.example.bankservice.exception.WrongAccountNumberException;
 import com.example.bankservice.mapper.ClientDtoToClientMapper;
+import com.example.bankservice.model.BankAccount;
 import com.example.bankservice.model.Client;
+import com.example.bankservice.repository.BankAccountRepository;
 import com.example.bankservice.repository.ClientRepository;
 import com.example.bankservice.request.ClientRequest;
+import com.example.bankservice.request.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +25,7 @@ public class ClientService {
     private final JWTService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final BankAccountRepository bankAccountRepository;
 
     private final ClientRepository clientRepository;
 
@@ -39,9 +44,12 @@ public class ClientService {
         return findingByPesel.isPresent();
     }
 
-    public String verify(Client client) {
+    public String verify(LoginRequest loginRequest) {
+        BankAccount bankAccount = bankAccountRepository.findByAccountNumber(loginRequest.getAccountNumber()).orElseThrow(WrongAccountNumberException::new);
+        Client client = bankAccount.getClient();
+
         Authentication authentication =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(client.getUsername(), client.getPassword()));
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(client.getPesel(), loginRequest.getPassword()));
 
         if (authentication.isAuthenticated()) {
             return jwtService.generateToken(client.getPesel());

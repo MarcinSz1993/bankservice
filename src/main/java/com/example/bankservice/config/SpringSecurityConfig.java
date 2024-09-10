@@ -33,6 +33,8 @@ public class SpringSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("clients/","clients/login").permitAll()
+                        .requestMatchers("transactions/").permitAll()
+                        .requestMatchers("accounts/").permitAll()
                         .anyRequest().authenticated())
                 //.formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())

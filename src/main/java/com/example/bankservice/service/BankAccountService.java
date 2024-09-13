@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
-import java.util.Random;
 import java.util.function.Supplier;
 
 @Service
@@ -39,9 +38,8 @@ public class BankAccountService {
     }
 
     public String generateAccountNumber(){
-        Random random = new Random();
-        long accountNumber = random.nextLong(100000000, 999999999);
-        return String.valueOf(accountNumber);
+        long time = System.currentTimeMillis();
+        return String.valueOf(time).substring(2, 12);
     }
 
     public double checkBalance(String accountNumber) throws Throwable {

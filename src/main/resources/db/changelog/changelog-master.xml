@@ -7,4 +7,8 @@
     <include file="/db/changelog/changelog-001.sql"/>
     <include file="/db/changelog/changelog-002.sql"/>
     <include file="/db/changelog/changelog-003.sql"/>
+    <include file="/db/changelog/changelog-004.sql"/>
+    <include file="/db/changelog/changelog-005.sql"/>
+    <include file="/db/changelog/changelog-006.sql"/>
+    <include file="/db/changelog/changelog-007.sql"/>
 </databaseChangeLog>

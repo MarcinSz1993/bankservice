@@ -2,4 +2,5 @@
 
 --changeset MarcinSz1993:4
 
-UPDATE client SET
+ALTER TABLE client
+ADD COLUMN password VARCHAR(255);

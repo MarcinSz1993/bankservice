@@ -7,6 +7,9 @@ import com.example.bankservice.model.Transaction;
 import com.example.bankservice.model.TransactionType;
 import com.example.bankservice.repository.BankAccountRepository;
 import com.example.bankservice.repository.TransactionRepository;
+import com.example.bankservice.transaction.DepositTransaction;
+import com.example.bankservice.transaction.OnlinePaymentTransaction;
+import com.example.bankservice.transaction.WithdrawalTransaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,39 +19,34 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
-    private final TransactionRepository transactionRepository;
     private final BankAccountRepository bankAccountRepository;
+    private final TransactionRepository transactionRepository;
+    private final OnlinePaymentTransaction onlinePaymentTransaction;
+    private final WithdrawalTransaction withdrawalTransaction;
+    private final DepositTransaction depositTransaction;
 
     @Transactional
-    public Transaction executeTransaction(String accountNumber, double amount, TransactionType transactionType){
-        BankAccount account = bankAccountRepository.findByAccountNumber(accountNumber).orElseThrow(WrongAccountNumberException::new);
-
-        if(!transactionType.name().equals("DEPOSIT") && account.getBalance() < amount) {
-            throw new NotEnoughMoneyException();
+    public Transaction executeTransaction(String senderAccountNumber, double amount, TransactionType transactionType,String recipientAccountNumber){
+        BankAccount bankAccount = bankAccountRepository.findByAccountNumber(senderAccountNumber).orElseThrow(WrongAccountNumberException::new);
+        if (transactionType == TransactionType.ONLINE_PAYMENT) {
+            onlinePaymentTransaction.execute(senderAccountNumber, amount, recipientAccountNumber);
+        } else if (transactionType == TransactionType.DEPOSIT) {
+            depositTransaction.execute(senderAccountNumber, amount);
+        } else if (transactionType == TransactionType.WITHDRAWAL) {
+            withdrawalTransaction.execute(senderAccountNumber, amount);
         }
-
-        Transaction transaction = createTransaction(amount, transactionType, account);
-        updateAccountBalance(amount, transactionType, account);
-        bankAccountRepository.save(account);
+        Transaction transaction = createTransaction(amount, transactionType, bankAccount);
         return transactionRepository.save(transaction);
     }
 
-    private static Transaction createTransaction(double amount, TransactionType transactionType, BankAccount account) {
+
+    public static Transaction createTransaction(double amount, TransactionType transactionType, BankAccount account) {
         Transaction transaction = new Transaction();
         transaction.setAmount(amount);
         transaction.setTypeOfTransaction(transactionType);
         transaction.setDateOfTransaction(LocalDateTime.now());
         transaction.setBankAccount(account);
         return transaction;
-    }
-
-    private void updateAccountBalance(double amount, TransactionType transactionType, BankAccount account) {
-        double currentBalance = account.getBalance();
-        if (transactionType == TransactionType.DEPOSIT) {
-            account.setBalance(currentBalance + amount);
-        } else {
-            account.setBalance(currentBalance - amount);
-        }
     }
 
     public void validateEnoughMoney(double amount, BankAccount account) {

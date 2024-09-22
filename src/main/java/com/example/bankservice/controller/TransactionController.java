@@ -18,9 +18,10 @@ public class TransactionController {
 
     @PutMapping("/")
     public Transaction executeTransaction(@RequestBody DataForTransferRequest dataForTransferRequest){
-        return transactionService.executeTransaction(dataForTransferRequest.getAccountNumber(),
+        return transactionService.executeTransaction(dataForTransferRequest.getSenderAccountNumber(),
                 dataForTransferRequest.getAmount(),
-                dataForTransferRequest.getTransactionType());
+                dataForTransferRequest.getTransactionType(),
+                dataForTransferRequest.getRecipientAccountNumber());
     }
 
 }

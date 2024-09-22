@@ -14,4 +14,5 @@ public class EventManagementSystemTransactionRequest {
     private TransactionType transactionType;
     private Long eventId;
     private Long userId;
+    private String recipientAccountNumber;
 }

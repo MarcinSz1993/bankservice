@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class DataForTransferRequest {
-    private String accountNumber;
+    private String senderAccountNumber;
     private double amount;
     private TransactionType transactionType;
+    private String recipientAccountNumber;
 }

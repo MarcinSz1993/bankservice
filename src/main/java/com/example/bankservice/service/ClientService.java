@@ -10,6 +10,7 @@ import com.example.bankservice.repository.ClientRepository;
 import com.example.bankservice.request.ClientRequest;
 import com.example.bankservice.request.LoginRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ClientService {
     private final JWTService jwtService;
     private final PasswordEncoder passwordEncoder;
@@ -45,8 +47,10 @@ public class ClientService {
     }
 
     public String verify(LoginRequest loginRequest) {
+
         BankAccount bankAccount = bankAccountRepository.findByAccountNumber(loginRequest.getAccountNumber()).orElseThrow(WrongAccountNumberException::new);
         Client client = bankAccount.getClient();
+        log.info("Authenticating user with PESEL: {} and password: {}", client.getPesel(), loginRequest.getPassword());
 
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(client.getPesel(), loginRequest.getPassword()));

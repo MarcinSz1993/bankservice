@@ -13,7 +13,6 @@ public class KafkaService {
     private final TransactionService transactionService;
     private final KafkaMessageProducer kafkaMessageProducer;
 
-
     @KafkaListener(topics = "expectingPayments",groupId = "bank-service")
     public void consumeTransactionRequestMessage(String message) throws JsonProcessingException {
         System.out.println("Message from Kafka: " + message);
@@ -22,7 +21,8 @@ public class KafkaService {
         System.out.println("Converted message: " + eventManagementSystemTransactionRequest);
         transactionService.executeTransaction(eventManagementSystemTransactionRequest.getAccountNumber(),
                 eventManagementSystemTransactionRequest.getAmount(),
-                eventManagementSystemTransactionRequest.getTransactionType());
+                eventManagementSystemTransactionRequest.getTransactionType(),
+                eventManagementSystemTransactionRequest.getRecipientAccountNumber());
         kafkaMessageProducer.sendTransactionCompletedMessageToCompletedTransactionsTopic(eventManagementSystemTransactionRequest);
         System.out.println("Message sent: " + eventManagementSystemTransactionRequest);
     }

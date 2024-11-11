@@ -16,4 +16,10 @@ public class KafkaMessageProducer {
         String serializedEventManagementSystemTransactionRequest = objectMapper.writeValueAsString(eventManagementSystemTransactionRequest);
         kafkaTemplate.send("completedTransactions",serializedEventManagementSystemTransactionRequest);
     }
+
+    public void sendTransactionFailedMessageToFailedTransactionsTopic(EventManagementSystemTransactionRequest eventManagementSystemTransactionRequest) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String serializedEventManagementSystemTransactionRequest = objectMapper.writeValueAsString(eventManagementSystemTransactionRequest);
+        kafkaTemplate.send("failedTransactions",serializedEventManagementSystemTransactionRequest);
+    }
 }

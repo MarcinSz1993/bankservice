@@ -11,6 +11,8 @@ import com.example.bankservice.transaction.DepositTransaction;
 import com.example.bankservice.transaction.OnlinePaymentTransaction;
 import com.example.bankservice.transaction.WithdrawalTransaction;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,10 +26,14 @@ public class TransactionService {
     private final OnlinePaymentTransaction onlinePaymentTransaction;
     private final WithdrawalTransaction withdrawalTransaction;
     private final DepositTransaction depositTransaction;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Transaction executeTransaction(String senderAccountNumber, double amount, TransactionType transactionType,String recipientAccountNumber){
+    public Transaction executeTransaction(String senderAccountNumber,String password, double amount, TransactionType transactionType,String recipientAccountNumber) throws WrongAccountNumberException{
         BankAccount bankAccount = bankAccountRepository.findByAccountNumber(senderAccountNumber).orElseThrow(WrongAccountNumberException::new);
+        if (!passwordEncoder.matches(password,bankAccount.getClient().getPassword())) {
+            throw new BadCredentialsException("Wrong password");
+        }
         if (transactionType == TransactionType.ONLINE_PAYMENT) {
             onlinePaymentTransaction.execute(senderAccountNumber, amount, recipientAccountNumber);
         } else if (transactionType == TransactionType.DEPOSIT) {

@@ -1,9 +1,9 @@
-FROM openjdk:17
+FROM openjdk:21
 
-COPY target/bankservice_app.jar /usr/app/
+COPY target/bankservice-0.0.1-SNAPSHOT.jar /usr/app/
 
 COPY src/main/resources/db/changelog /usr/app/src/main/resources/db/changelog
 
 WORKDIR /usr/app
 
-ENTRYPOINT ["java", "-jar", "bankservice_app.jar"]
+ENTRYPOINT ["java", "-jar", "bankservice-0.0.1-SNAPSHOT.jar"]

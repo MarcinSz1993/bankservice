@@ -12,8 +12,9 @@ import com.example.bankservice.request.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -47,17 +48,16 @@ public class ClientService {
     }
 
     public String verify(LoginRequest loginRequest) {
-
         BankAccount bankAccount = bankAccountRepository.findByAccountNumber(loginRequest.getAccountNumber()).orElseThrow(WrongAccountNumberException::new);
         Client client = bankAccount.getClient();
         log.info("Authenticating user with PESEL: {} and password: {}", client.getPesel(), loginRequest.getPassword());
 
-        Authentication authentication =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(client.getPesel(), loginRequest.getPassword()));
-
-        if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(client.getPesel());
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(client.getPesel(), loginRequest.getPassword()));
+        } catch (AuthenticationException e) {
+            log.error("Incorrect username or password");
+            throw new BadCredentialsException("Incorrect username or password");
         }
-        return "fail";
+        return jwtService.generateToken(client.getPesel());
     }
 }

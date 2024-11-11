@@ -1,9 +1,29 @@
 services:
-  postgres:
-    image: 'postgres:latest'
+  bankservice_database:
+    image: postgres
+    volumes:
+      - bankservice_postgres_data:/var/lib/postgresql/data
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      POSTGRES_USER: postgres
+      POSTGRES_DB: BankService
+      POSTGRES_PASSWORD: qwerty
     ports:
-      - '5432'
+      - "5432:5432"
+
+
+  bankservice_app:
+    image: marcinsz1993/bank_service_app:v3.0
+    ports:
+      - "9090:9090"
+    depends_on:
+      - bankservice_database
+#      - kafka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://bankservice_database:5432/BankService
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: qwerty
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
+
+volumes:
+  bankservice_postgres_data:

@@ -5,6 +5,7 @@ import com.example.bankservice.model.Client;
 import com.example.bankservice.request.LoginRequest;
 import com.example.bankservice.service.ClientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class ClientController {
     }
 
     @PostMapping("/login")
-    public String login (@RequestBody @Validated LoginRequest loginRequest){
-        return clientService.verify(loginRequest);
+    public ResponseEntity<String> login (@RequestBody @Validated LoginRequest loginRequest){
+        return ResponseEntity.ok(clientService.verify(loginRequest));
     }
 }
